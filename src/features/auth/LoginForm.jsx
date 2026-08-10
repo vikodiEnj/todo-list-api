@@ -1,4 +1,4 @@
-import { login } from "./api/authApi";
+import { login } from "./authApi";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 
@@ -49,9 +49,7 @@ const LoginForm = ({ handleAuthSuccess }) => {
               },
             })}
           />
-          {errors.email && (
-            <p className="error-text">{errors.email.message}</p>
-          )}
+          {errors.email && <p className="error-text">{errors.email.message}</p>}
         </div>
 
         <div className="form-group">

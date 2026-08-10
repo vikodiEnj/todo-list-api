@@ -1,10 +1,10 @@
 import "./App.css";
-import TaskList from "./todo-list/TaskList";
-import TaskInput from "./todo-list/TaskInput";
-import TaskFilter from "./todo-list/TaskFilter";
-import Footer from "./todo-list/Footer";
-import LoginForm from "./LoginForm";
-import RegistrationForm from "./RegistrationForm";
+import TaskList from "./features/todos/TaskList";
+import TaskInput from "./features/todos/TaskInput";
+import TaskFilter from "./features/todos/TaskFilter";
+import Footer from "./features/todos/Footer";
+import LoginForm from "./features/auth/LoginForm";
+import RegistrationForm from "./features/auth/RegistrationForm";
 import { useState, useEffect } from "react";
 import {
   createTodo,
@@ -12,7 +12,7 @@ import {
   toggleTodo,
   deleteTodo,
   editTodo,
-} from "./api/todosApi";
+} from "./features/todos/todosApi";
 
 function App() {
   const [token, setToken] = useState(() =>

@@ -1,6 +1,6 @@
 export async function register(email, password, name) {
   const response = await fetch(
-    "https://todo-redev.onrender.com/api/auth/register",
+    `${import.meta.env.VITE_API_URL}/auth/register`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -16,7 +16,7 @@ export async function register(email, password, name) {
 
 export async function login(email, password) {
   const response = await fetch(
-    "https://todo-redev.onrender.com/api/auth/login",
+    `${import.meta.env.VITE_API_URL}/auth/login`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -1,4 +1,4 @@
-import { register as registerUser } from "./api/authApi";
+import { register as registerUser } from "./authApi";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 
@@ -83,9 +83,7 @@ const RegistrationForm = ({ handleAuthSuccess }) => {
               },
             })}
           />
-          {errors.email && (
-            <p className="error-text">{errors.email.message}</p>
-          )}
+          {errors.email && <p className="error-text">{errors.email.message}</p>}
         </div>
 
         <div className="form-group">
