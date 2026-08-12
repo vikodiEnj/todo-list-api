@@ -13,6 +13,14 @@ import {
   deleteTodo,
   editTodo,
 } from "./features/todos/todosApi";
+import { Routes, Route, useNavigate, Navigate } from "react-router";
+
+function PrivateRoute({ token, children }) {
+  if (!token) {
+    return <Navigate to="/login" />;
+  }
+  return children;
+}
 
 function App() {
   const [token, setToken] = useState(() =>
@@ -21,6 +29,7 @@ function App() {
 
   function handleAuthSuccess(newToken) {
     setToken(newToken);
+    navigate("/todo");
   }
 
   const [loading, setLoading] = useState(false);
@@ -136,63 +145,55 @@ function App() {
     }
   });
 
+  const navigate = useNavigate();
+
   return (
     <>
-      {token && (
-        <div className="app">
-          <h1>Приветствую проверяющего</h1>
-          <TaskInput addTask={addTask} actionLoading={actionLoading} />
-          <TaskFilter
-            filter={filter}
-            setFilter={setFilter}
-            sortOrder={sortOrder}
-            setSortOrder={setSortOrder}
-          />
-          {loading && <p>Загрузка задач...</p>}
-          {error && <p>{error}</p>}
-          <TaskList
-            actionLoading={actionLoading}
-            tasks={sortedTasks}
-            toggleTask={toggleTask}
-            deleteTask={deleteTask}
-            editTask={editTask}
-          />
-          <Footer
-            actionLoading={actionLoading}
-            clearCompleted={clearCompleted}
-            leftTasks={leftTasks}
-          />
-        </div>
-      )}
-      {!token && (
-        <>
-          {authView === "choice" && (
-            <div className="app auth-choice">
-              <h1>Добро пожаловать</h1>
-              <button
-                className="btn btn-primary"
-                onClick={() => setAuthView("register")}
-              >
-                Регистрация
-              </button>
-              <button
-                className="btn btn-chip"
-                onClick={() => setAuthView("login")}
-              >
-                Вход
-              </button>
-            </div>
-          )}
-
-          {authView === "register" && (
-            <RegistrationForm handleAuthSuccess={handleAuthSuccess} />
-          )}
-
-          {authView === "login" && (
-            <LoginForm handleAuthSuccess={handleAuthSuccess} />
-          )}
-        </>
-      )}
+      <Routes>
+        <Route
+          path="/register"
+          element={<RegistrationForm handleAuthSuccess={handleAuthSuccess} />}
+        />
+        <Route
+          path="/login"
+          element={<LoginForm handleAuthSuccess={handleAuthSuccess} />}
+        />
+        <Route
+          path="/todo"
+          element={
+            <PrivateRoute token={token}>
+              <div className="app">
+                <h1>Приветствую проверяющего</h1>
+                <TaskInput addTask={addTask} actionLoading={actionLoading} />
+                <TaskFilter
+                  filter={filter}
+                  setFilter={setFilter}
+                  sortOrder={sortOrder}
+                  setSortOrder={setSortOrder}
+                />
+                {loading && <p>Загрузка задач...</p>}
+                {error && <p>{error}</p>}
+                <TaskList
+                  actionLoading={actionLoading}
+                  tasks={sortedTasks}
+                  toggleTask={toggleTask}
+                  deleteTask={deleteTask}
+                  editTask={editTask}
+                />
+                <Footer
+                  actionLoading={actionLoading}
+                  clearCompleted={clearCompleted}
+                  leftTasks={leftTasks}
+                />
+              </div>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="*"
+          element={<Navigate to={token ? "/todo" : "/login"} />}
+        />
+      </Routes>
     </>
   );
 }
