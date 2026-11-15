@@ -1,22 +1,29 @@
 import { login } from "./authApi";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { getErrorMessage } from "../../api/getErrorMessage";
+import type { LoginFormValues } from "../../types";
+import type { ReactElement } from "react";
 
-const LoginForm = ({ handleAuthSuccess }) => {
+type LoginFormProps = {
+  handleAuthSuccess: (token: string) => void;
+};
+
+const LoginForm = ({ handleAuthSuccess }: LoginFormProps): ReactElement => {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm({
+  } = useForm<LoginFormValues>({
     mode: "onTouched",
   });
 
-  const [error, setError] = useState();
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  async function onSubmit(data) {
+  async function onSubmit(data: LoginFormValues): Promise<void> {
     setError(null);
     setSuccess(false);
     try {
@@ -26,11 +33,12 @@ const LoginForm = ({ handleAuthSuccess }) => {
       handleAuthSuccess(result.access_token);
       setSuccess(true);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
   }
+
   const password = watch("password");
 
   return (

@@ -1,4 +1,19 @@
-const TaskFilter = ({ filter, setFilter, sortOrder, setSortOrder }) => {
+import type { ReactElement } from "react";
+import type { Filter, SortOrder } from "../../types";
+
+type TaskFilterProps = {
+  filter: Filter;
+  setFilter: (arg: Filter) => void;
+  sortOrder: SortOrder;
+  setSortOrder: (arg: SortOrder) => void;
+};
+
+const TaskFilter = ({
+  filter,
+  setFilter,
+  sortOrder,
+  setSortOrder,
+}: TaskFilterProps): ReactElement => {
   return (
     <div className="task-filter">
       <div className="filter-group">
