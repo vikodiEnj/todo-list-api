@@ -1,22 +1,30 @@
 import { register as registerUser } from "./authApi";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import type { ReactElement } from "react";
+import { getErrorMessage } from "../../api/getErrorMessage";
+import type { RegisterFormValues } from "../../types";
 
-const RegistrationForm = ({ handleAuthSuccess }) => {
+type RegisterFormProps = {
+  handleAuthSuccess: (token: string) => void;
+};
+
+const RegistrationForm = ({
+  handleAuthSuccess,
+}: RegisterFormProps): ReactElement => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm({
+  } = useForm<RegisterFormValues>({
     mode: "onTouched",
   });
 
-  const [error, setError] = useState();
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  async function onSubmit(data) {
+  async function onSubmit(data: RegisterFormValues): Promise<void> {
     setError(null);
     setSuccess(false);
     try {
@@ -26,12 +34,11 @@ const RegistrationForm = ({ handleAuthSuccess }) => {
       handleAuthSuccess(result.access_token);
       setSuccess(true);
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
   }
-  const password = watch("password");
 
   return (
     <div className="app">
@@ -43,7 +50,9 @@ const RegistrationForm = ({ handleAuthSuccess }) => {
             placeholder="Логин"
             {...register("name", { required: "Укажите логин" })}
           />
-          {errors.name && <p className="error-text">{errors.name.message}</p>}
+          {errors.name && (
+            <p className="error-text">{getErrorMessage(errors.name.message)}</p>
+          )}
         </div>
 
         <div className="form-group">
@@ -67,7 +76,9 @@ const RegistrationForm = ({ handleAuthSuccess }) => {
             </label>
           </div>
           {errors.gender && (
-            <p className="error-text">{errors.gender.message}</p>
+            <p className="error-text">
+              {getErrorMessage(errors.gender.message)}
+            </p>
           )}
         </div>
 
@@ -83,7 +94,11 @@ const RegistrationForm = ({ handleAuthSuccess }) => {
               },
             })}
           />
-          {errors.email && <p className="error-text">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="error-text">
+              {getErrorMessage(errors.email.message)}
+            </p>
+          )}
         </div>
 
         <div className="form-group">
@@ -100,7 +115,9 @@ const RegistrationForm = ({ handleAuthSuccess }) => {
             })}
           />
           {errors.password && (
-            <p className="error-text">{errors.password.message}</p>
+            <p className="error-text">
+              {getErrorMessage(errors.password.message)}
+            </p>
           )}
         </div>
 

@@ -1,4 +1,19 @@
 import { useState } from "react";
+import type {
+  KeyboardEvent,
+  ReactElement,
+  ChangeEvent,
+  MouseEvent,
+} from "react";
+import type { Task } from "../../types";
+
+type TaskItemProps = {
+  item: Task;
+  toggleTask: (id: number) => void;
+  deleteTask: (id: number) => void;
+  editTask: (id: number, title: string) => void;
+  actionLoading: boolean;
+};
 
 const TaskItem = ({
   item,
@@ -6,12 +21,12 @@ const TaskItem = ({
   deleteTask,
   editTask,
   actionLoading,
-}) => {
+}: TaskItemProps): ReactElement => {
   const [isEditing, setIsEditing] = useState(false);
 
   const [draft, setDraft] = useState(item.title);
 
-  function saveEdit() {
+  function saveEdit(): void {
     if (draft.trim().length === 0) {
       return;
     } else {
@@ -20,12 +35,20 @@ const TaskItem = ({
     }
   }
 
-  function handleChange(e) {
+  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>): void {
     if (e.key === "Enter") {
       saveEdit();
     } else if (e.key === "Escape") {
       setIsEditing(false);
     }
+  }
+
+  function handleChange(e: ChangeEvent<HTMLInputElement>): void {
+    setDraft(e.target.value);
+  }
+
+  function handleSaveMouseDown(e: MouseEvent<HTMLButtonElement>): void {
+    e.preventDefault();
   }
 
   return (
@@ -43,14 +66,14 @@ const TaskItem = ({
             className="edit-input"
             autoFocus
             value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={handleChange}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
             onBlur={() => setIsEditing(false)}
           />
           <button
             disabled={actionLoading}
             className="btn btn-save"
-            onMouseDown={(e) => e.preventDefault()}
+            onMouseDown={handleSaveMouseDown}
             onClick={saveEdit}
           >
             Сохранить

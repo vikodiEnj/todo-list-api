@@ -1,4 +1,16 @@
-const Footer = ({ clearCompleted, leftTasks, actionLoading }) => {
+import type { ReactElement } from "react";
+
+type FooterProps = {
+  clearCompleted: () => void;
+  leftTasks: number;
+  actionLoading: boolean;
+};
+
+const Footer = ({
+  clearCompleted,
+  leftTasks,
+  actionLoading,
+}: FooterProps): ReactElement => {
   return (
     <div className="footer">
       <p className="left-count">Осталось задач: {leftTasks}</p>
